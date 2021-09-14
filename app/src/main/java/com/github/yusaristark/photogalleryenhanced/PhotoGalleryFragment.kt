@@ -38,7 +38,7 @@ class PhotoGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         photoGalleryViewModel.galleryItemLiveData.observe(viewLifecycleOwner, Observer { galleryItems ->
-            Log.d(TAG, "Response received: $galleryItems")
+            //обновление адаптера при изменении данных
             photoRecyclerView.adapter = PhotoAdapter(galleryItems)
         })
     }

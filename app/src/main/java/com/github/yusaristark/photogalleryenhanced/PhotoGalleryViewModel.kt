@@ -5,8 +5,16 @@ import androidx.lifecycle.ViewModel
 
 class PhotoGalleryViewModel : ViewModel() {
     val galleryItemLiveData: LiveData<List<GalleryItem>>
+    private val flickrFetcher: FlickrFetcher
 
     init {
-        galleryItemLiveData = FlickrFetcher().fetchPhotos()
+        flickrFetcher = FlickrFetcher()
+        galleryItemLiveData = flickrFetcher.fetchPhotos()
+    }
+
+    //отмена текущего запроса (если такой есть) при завершении приложения
+    override fun onCleared() {
+        super.onCleared()
+        flickrFetcher.cancelRequestInFlight()
     }
 }

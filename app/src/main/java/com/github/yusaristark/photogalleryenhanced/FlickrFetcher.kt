@@ -23,6 +23,7 @@ FlickrFetcher — это своего рода простой репозитор
 
 class FlickrFetcher {
     private val flickrApi: FlickrApi
+    private lateinit var currentCall: Call<FlickrResponse>
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -38,6 +39,7 @@ class FlickrFetcher {
     fun fetchPhotos(): LiveData<List<GalleryItem>> {
         val responseLiveData: MutableLiveData<List<GalleryItem>> = MutableLiveData()
         val flickrRequest: Call<FlickrResponse> = flickrApi.fetchPhotos()
+        currentCall = flickrRequest
         flickrRequest.enqueue(object : Callback<FlickrResponse> {
             override fun onFailure(call: Call<FlickrResponse>, t: Throwable) {
                 Log.e(TAG, "Failed to fetch photos", t)
@@ -53,5 +55,12 @@ class FlickrFetcher {
             }
         })
         return responseLiveData
+    }
+
+    //отмена текущего запроса
+    fun cancelRequestInFlight() {
+        if (::currentCall.isInitialized) {
+            currentCall.cancel()
+        }
     }
 }
