@@ -22,6 +22,7 @@ class ThumbnailDownloader<in T>(
     private lateinit var requestHandler: Handler
     private val requestMap = ConcurrentHashMap<T, String>()
     private val flickrFetcher: FlickrFetcher =  FlickrFetcher()
+
     //наблюдатель жизненного цикла фрагмента
     val fragmentLifecycleObserver: LifecycleObserver = object : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -52,8 +53,6 @@ class ThumbnailDownloader<in T>(
         return super.quit()
     }
 
-
-
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("HandlerLeak")
     override fun onLooperPrepared() {
@@ -67,7 +66,6 @@ class ThumbnailDownloader<in T>(
             }
         }
     }
-
 
     fun queueThumbnail(target: T, url: String) {
         Log.i(TAG, "Got a URL:$url")
