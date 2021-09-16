@@ -1,5 +1,6 @@
 package com.github.yusaristark.photogalleryenhanced
 
+import android.app.ProgressDialog
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -22,6 +23,7 @@ class PhotoGalleryFragment : Fragment() {
     private lateinit var photoRecyclerView: RecyclerView
     private lateinit var photoGalleryViewModel: PhotoGalleryViewModel
     private lateinit var thumbnailDownloader: ThumbnailDownloader<PhotoHolder>
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,13 @@ class PhotoGalleryFragment : Fragment() {
         lifecycle.addObserver(thumbnailDownloader.fragmentLifecycleObserver)
 
         setHasOptionsMenu(true)
+
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.apply {
+            setTitle("Downloading photos")
+            setMessage("It might take a few seconds...")
+            setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        }
     }
 
     override fun onCreateView(
@@ -55,6 +64,7 @@ class PhotoGalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         photoGalleryViewModel.galleryItemLiveData.observe(viewLifecycleOwner, Observer { galleryItems ->
             //обновление адаптера при изменении данных
+            progressDialog.dismiss()
             photoRecyclerView.adapter = PhotoAdapter(galleryItems)
         })
     }
@@ -68,7 +78,11 @@ class PhotoGalleryFragment : Fragment() {
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(queryText: String): Boolean {
                     Log.d(TAG, "QueryTExtSubmit: $queryText")
+                    searchItem.collapseActionView()
+                    onActionViewCollapsed()
+                    progressDialog.show()
                     photoGalleryViewModel.fetchPhotos(queryText)
+                    clearFocus()
                     return true
                 }
 
@@ -80,7 +94,6 @@ class PhotoGalleryFragment : Fragment() {
             setOnSearchClickListener {
                 searchView.setQuery(photoGalleryViewModel.searchTerm, false)
             }
-
         }
     }
 
