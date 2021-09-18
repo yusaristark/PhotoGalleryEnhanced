@@ -23,6 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PhotoPageActivity" />
         <receiver android:name=".NotificationReceiver"
             android:permission="com.github.yusaristark.photogalleryenhanced.PRIVATE"
             android:exported="false">
