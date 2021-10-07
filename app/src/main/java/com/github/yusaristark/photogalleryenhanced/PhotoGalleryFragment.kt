@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -35,7 +36,7 @@ class PhotoGalleryFragment : VisibleFragment() {
         super.onCreate(savedInstanceState)
         retainInstance = true
         photoGalleryViewModel = ViewModelProvider(this).get(PhotoGalleryViewModel::class.java)
-        val responseHandler = Handler()
+        val responseHandler = Handler(Looper.getMainLooper())
         thumbnailDownloader = ThumbnailDownloader(responseHandler) { photoHolder, bitmap ->
             val drawable = BitmapDrawable(resources, bitmap)
             photoHolder.bindDrawable(drawable)

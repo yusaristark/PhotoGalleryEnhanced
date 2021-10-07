@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.Looper
 import android.os.Message
 import android.util.Log
 import androidx.lifecycle.Lifecycle
@@ -56,7 +57,7 @@ class ThumbnailDownloader<in T>(
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("HandlerLeak")
     override fun onLooperPrepared() {
-        requestHandler = object : Handler() {
+        requestHandler = object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(msg: Message) {
                 if (msg.what == MESSAGE_DOWNLOAD) {
                     val target = msg.obj as T
